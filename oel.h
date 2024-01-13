@@ -167,5 +167,97 @@ fwrite(statement1, sizeof(char), statementLength1, outputFile);
     fclose(file3);
     fclose(outputFile);
 }
+/**
+ * Structure to hold the upload status.
+ */
+struct UploadStatus {
+    const char* payload;
+    size_t size;
+};
+
+/**
+ * Callback function for reading the data to be uploaded.
+ */
+size_t ReadCallback(void* ptr, size_t size, size_t nmemb, void* userp) {
+    struct UploadStatus* upload_ctx = (struct UploadStatus*)userp;
+
+    if (upload_ctx->size == 0)
+        return 0;
+
+    if (size * nmemb < 1)
+        return 0;
+
+    *(char*)ptr = upload_ctx->payload[0];
+    upload_ctx->payload++;
+    upload_ctx->size--;
+
+    return 1;
+}
+/**
+ * Function to send an email with the provided body.
+ *
+ * @param body The email body.
+ * @return 0 if the email was sent successfully, otherwise a non-zero value.
+ */
+int send_mail(const char* body) {
+    CURL* curl;
+    CURLcode res;
+
+    curl_global_init(CURL_GLOBAL_DEFAULT);
+    curl = curl_easy_init();
+
+    if (curl) {
+        // Set email parameters
+        const char* from = "malaikamustafa662@gmail.com";
+        const char* to = "malaikamustafa662@gmail.com";
+        const char* subject = "Weather Alert!";
+        const char* payload = body;
+
+        // Construct the email payload
+        char headers[2048];
+        snprintf(headers, sizeof(headers), "From: %s\r\nTo: %s\r\nSubject: %s\r\n\r\n%s", from, to, subject, payload);
+
+        struct UploadStatus upload_ctx = { headers, strlen(headers) };
+
+        curl_easy_setopt(curl, CURLOPT_URL, "smtps://smtp.gmail.com");
+        curl_easy_setopt(curl, CURLOPT_USE_SSL, (long)CURLUSESSL_ALL);
+        curl_easy_setopt(curl, CURLOPT_MAIL_FROM, from);
+
+        struct curl_slist* recipients = NULL;
+        recipients = curl_slist_append(recipients, to);
+        curl_easy_setopt(curl, CURLOPT_MAIL_RCPT, recipients);
+
+        curl_easy_setopt(curl, CURLOPT_USERNAME, "malaikamustafa662@gmail.com");
+        curl_easy_setopt(curl, CURLOPT_PASSWORD, "riii nill inxa gvmf");
+
+        curl_easy_setopt(curl, CURLOPT_READFUNCTION, ReadCallback);
+        curl_easy_setopt(curl, CURLOPT_READDATA, &upload_ctx);
+        curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
+        res = curl_easy_perform(curl);
+
+        if (res != CURLE_OK) {
+            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+        }
+
+        curl_slist_free_all(recipients);
+        curl_easy_cleanup(curl);
+    }
+
+    curl_global_cleanup();
+    return 0;
+}
+/**
+ * Callback function to write fetched data.
+ */
+// Callback function to write fetched data
+size_t write_callback(void *contents, size_t size, size_t nmemb, void *userp) {
+    // Write fetched data to a file
+    FILE *file = (FILE *)userp;
+    fwrite(contents, size, nmemb, file);
+
+    return size * nmemb;
+}
+
+
 
 
