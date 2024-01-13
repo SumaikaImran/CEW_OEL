@@ -1,0 +1,12 @@
+Weather Data Analysis of today's weather of Karachi!
+
+This report presents an analysis of weather data for today. The data includes:
+1.Average Temperature
+2.Maximum Temperature
+2.Minimum Temperature
+
+Average Temperature: 18.90
+Maximum Temperature: 20.90
+Minimum Temperature: 17.90
+
+Stay updated, stay safe!
