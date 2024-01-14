@@ -62,7 +62,7 @@ int main() {
     ) {
         float temp = json_object_get_double(temperature);
         float celsius_temp = kelvinToCelsius(temp);
-        char h_message[1000] = "It's getting cold out there!\nRemember to stay indoors or seek shade during the hottest hours of the day, wear lightweight and breathable clothing, drink plenty of water, and apply sunscreen to protect your skin from the sun's rays. \nTake care and stay cool!";
+        char h_message[1000] = "It's getting hot out there!\nRemember to stay indoors or seek shade during the hottest hours of the day, wear lightweight and breathable clothing, drink plenty of water, and apply sunscreen to protect your skin from the sun's rays. \nTake care and stay cool!";
         char c_message[1000] = "It's getting cold out there!\nRemember to bundle up in warm layers, wear a cozy hat and gloves, and stay hydrated even in the cold weather.\nStay warm and stay safe!";
 
         if (celsius_temp > 50) {
