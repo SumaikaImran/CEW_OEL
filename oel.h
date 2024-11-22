@@ -6,7 +6,7 @@
 #include <json-c/json.h>
 #include <stdbool.h>
 #define USERNAME "malaikamustafa662@gmail.com"
-#define APP_PASSWORD "riii nill inxa gvmf"
+#define APP_PASSWORD "write your app password"
 
 /**
  * Function to calculate the average temperature from a file.
